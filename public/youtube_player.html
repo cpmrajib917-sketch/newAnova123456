@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnOvA YouTube Player</title>
+    <!-- Plyr CSS -->
+    <link rel="stylesheet" href="plyr.css" />
+    <style>
+        /* Modern Dark Theme Variables matching AnOvA UI */
+        :root {
+            --plyr-color-main: #00e5ff; /* Cyan accent matching AnOvA theme */
+            --plyr-video-background: #000;
+            --plyr-menu-background: rgba(1, 3, 7, 0.95);
+            --plyr-menu-color: #fff;
+            --plyr-menu-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --plyr-font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --plyr-control-icon-size: 18px;
+            --plyr-control-spacing: 10px;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        /* Plyr Customization */
+        .plyr--full-ui input[type=range] {
+            color: var(--plyr-color-main);
+        }
+
+        .plyr__control--overlaid {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        .plyr--video .plyr__controls {
+            background: linear-gradient(rgba(0, 0, 0, 0), rgba(1, 3, 7, 0.95));
+            border-bottom-left-radius: inherit;
+            border-bottom-right-radius: inherit;
+        }
+
+        /* Strict CSS to hide YouTube Branding - scales/crops the inner iframe */
+        .plyr__video-wrapper iframe, .plyr__video-embed iframe, .plyr iframe {
+            top: -50% !important;
+            height: 200% !important;
+            position: absolute;
+            left: 0;
+            width: 100%;
+            pointer-events: none !important;
+            transition: opacity 0.4s ease, top 0.3s ease, height 0.3s ease;
+        }
+
+        /* Hide YouTube iframe before first play to prevent YouTube branding/logo/thumbnail from showing */
+        .plyr:not(.has-played) .plyr__video-wrapper iframe,
+        .plyr:not(.has-played) .plyr__video-embed iframe,
+        .plyr:not(.has-played) .plyr iframe {
+            opacity: 0 !important;
+        }
+
+        /* Show iframe once playing or played */
+        .plyr.has-played .plyr__video-wrapper iframe,
+        .plyr.has-played .plyr__video-embed iframe,
+        .plyr.has-played .plyr iframe {
+            opacity: 1 !important;
+        }
+
+        .plyr__video-wrapper {
+            overflow: hidden;
+            border-radius: 0px;
+            box-shadow: none;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .plyr {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Error fallback: make the iframe fully visible and interactive so age-restricted/blocked videos can be verified or watched */
+        .plyr.has-error .plyr__video-wrapper iframe,
+        .plyr.has-error .plyr__video-embed iframe,
+        .plyr.has-error .plyr iframe {
+            top: 0 !important;
+            height: 100% !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+        
+        .plyr.has-error .plyr__controls,
+        .plyr.has-error .plyr__control--overlaid {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Plyr Player Container -->
+    <div id="player-wrapper" style="width:100%; height:100%; overflow:hidden;">
+        <div id="player" data-plyr-provider="youtube" data-plyr-embed-id=""></div>
+    </div>
+
+    <script src="plyr.js"></script>
+    <script>
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        let videoId = urlParams.get('id') || '';
+        const autoplay = urlParams.get('autoplay') === 'true';
+
+        // Dynamically set the YouTube Embed ID on the div before initializing
+        const playerDiv = document.getElementById('player');
+        if (videoId) {
+            playerDiv.setAttribute('data-plyr-embed-id', videoId);
+        } else {
+            // Placeholder video ID to prevent initialization failure
+            playerDiv.setAttribute('data-plyr-embed-id', 'Oke5OqwRFeM');
+        }
+
+        const player = new Plyr('#player', {
+            iconUrl: 'plyr.svg',
+            controls: [
+                'restart', // Restart playback
+                'rewind', // Rewind by the seek time (default 10 seconds)
+                'play', // Play/pause playback
+                'fast-forward', // Fast forward by the seek time (default 10 seconds)
+                'progress', // The progress bar and scrubber for playback and buffering
+                'current-time', // The current time of playback
+                'duration', // The full duration of the media
+                'mute', // Toggle mute
+                'volume', // Volume control
+                'settings', // Settings menu
+                'pip', // Picture-in-picture
+                'fullscreen', // Toggle fullscreen
+            ],
+            // Default settings to show in the menu
+            settings: ['quality', 'speed', 'loop'],
+            // Speed options
+            speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] },
+            // Quality options
+            quality: {
+                default: 1080,
+                options: [4320, 2880, 2160, 1440, 1080, 720, 480, 360, 240]
+            },
+            keyboard: { focused: true, global: true },
+            tooltips: { controls: true, seek: true },
+            clickToPlay: true,
+            autopause: true,
+            resetOnEnd: false,
+            invertTime: true,
+            toggleInvert: true,
+            disableContextMenu: true,
+            ratio: '16:9',
+            youtube: {
+                noCookie: true, // Uses youtube-nocookie.com to bypass standard cookie block and some embeds
+                rel: 0,
+                showinfo: 0,
+                iv_load_policy: 3,
+                modestbranding: 1,
+                controls: 0,
+                fs: 0,
+                autoplay: 0
+            }
+        });
+
+        // Function to update background thumbnail poster
+        function updatePoster(id) {
+            const container = player.elements.container;
+            if (container && id) {
+                container.style.backgroundImage = `url('https://img.youtube.com/vi/${id}/hqdefault.jpg')`;
+                container.style.backgroundSize = 'cover';
+                container.style.backgroundPosition = 'center';
+            }
+        }
+
+        // Add event listeners to propagate events to parent window
+        player.on('ready', (event) => {
+            window.parent.postMessage({ event: 'ready', videoId: videoId }, '*');
+            
+            // Set initial poster image
+            if (videoId) {
+                updatePoster(videoId);
+            }
+
+            // Bind native YouTube player error listener
+            try {
+                if (player.embed && typeof player.embed.addEventListener === 'function') {
+                    player.embed.addEventListener('onError', (errEvent) => {
+                        console.log("YouTube API Embed Error Code:", errEvent.data);
+                        const container = player.elements.container;
+                        if (container) {
+                            container.classList.add('has-error');
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn("Failed to bind YouTube onError listener:", e);
+            }
+
+            // SMART AUTOPLAY Logic
+            if (autoplay) {
+                player.muted = true;
+                player.play().then(() => {
+                    // Muted autoplay succeeded. Attempt to unmute after 0.8s
+                    setTimeout(() => {
+                        player.muted = false;
+                        // Check if unmuting caused playback to pause (blocked by browser policy)
+                        if (player.paused) {
+                            player.muted = true;
+                            player.play().catch(() => {});
+                        }
+                    }, 800);
+                }).catch((err) => {
+                    console.log("Muted autoplay failed:", err);
+                });
+            }
+
+            // Bind click listener on wrapper to support click-to-play since iframe has pointer-events: none
+            const wrapper = document.querySelector('.plyr__video-wrapper') || (player.elements && player.elements.wrapper);
+            if (wrapper) {
+                wrapper.style.cursor = 'pointer';
+                wrapper.addEventListener('click', (e) => {
+                    // Ignore clicks on controls or other button overlays
+                    if (e.target.closest('.plyr__controls') || e.target.closest('.plyr__control--overlaid')) {
+                        return;
+                    }
+                    if (player.playing) {
+                        player.pause();
+                    } else {
+                        player.play();
+                    }
+                });
+            }
+
+            // Explicit click listener on custom overlaid play button to trigger play
+            const overlaidBtn = document.querySelector('.plyr__control--overlaid');
+            if (overlaidBtn) {
+                overlaidBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    player.play();
+                });
+            }
+        });
+
+        let playAttemptTimeout = null;
+
+        player.on('play', () => {
+            // If it doesn't transition to 'playing' within 2.5 seconds, show the iframe as interactive
+            if (playAttemptTimeout) clearTimeout(playAttemptTimeout);
+            playAttemptTimeout = setTimeout(() => {
+                if (!player.playing) {
+                    console.log("Playback did not start. Triggering interactive fallback.");
+                    const container = player.elements.container;
+                    if (container) {
+                        container.classList.add('has-error');
+                    }
+                }
+            }, 2500);
+        });
+
+        player.on('playing', (event) => {
+            if (playAttemptTimeout) {
+                clearTimeout(playAttemptTimeout);
+                playAttemptTimeout = null;
+            }
+            const container = player.elements.container;
+            if (container) {
+                container.classList.add('has-played');
+                container.classList.remove('has-error');
+            }
+            window.parent.postMessage({ event: 'playing', videoId: videoId, currentTime: player.currentTime }, '*');
+        });
+
+        player.on('pause', (event) => {
+            if (playAttemptTimeout) {
+                clearTimeout(playAttemptTimeout);
+                playAttemptTimeout = null;
+            }
+            window.parent.postMessage({ event: 'paused', videoId: videoId, currentTime: player.currentTime }, '*');
+        });
+
+        // Error detection from Plyr itself
+        player.on('error', () => {
+            const container = player.elements.container;
+            if (container) {
+                container.classList.add('has-error');
+            }
+        });
+
+        player.on('ended', (event) => {
+            window.parent.postMessage({ event: 'ended', videoId: videoId }, '*');
+        });
+
+        player.on('timeupdate', (event) => {
+            window.parent.postMessage({ event: 'timeupdate', videoId: videoId, currentTime: player.currentTime, duration: player.duration }, '*');
+        });
+
+        // Handle fullscreen changes to maintain the crop hack and hide YouTube branding
+        player.on('enterfullscreen', (event) => {
+            const iframe = document.querySelector('.plyr__video-wrapper iframe, .plyr__video-embed iframe, .plyr iframe');
+            if (iframe) {
+                // Keep the top/height scale during full screen so the logo remains hidden
+                iframe.style.top = '-50%';
+                iframe.style.height = '200%';
+                iframe.style.width = '100%';
+                iframe.style.left = '0';
+                iframe.style.position = 'absolute';
+            }
+        });
+
+        player.on('exitfullscreen', (event) => {
+            const iframe = document.querySelector('.plyr__video-wrapper iframe, .plyr__video-embed iframe, .plyr iframe');
+            if (iframe) {
+                iframe.style.top = '-50%';
+                iframe.style.height = '200%';
+                iframe.style.width = '';
+                iframe.style.left = '';
+                iframe.style.position = '';
+            }
+        });
+
+        // Helper to extract video ID and load it dynamically
+        function loadVideo(id) {
+            if (id) {
+                videoId = id;
+                const container = player.elements.container;
+                if (container) {
+                    container.classList.remove('has-played');
+                }
+                updatePoster(id);
+                player.source = {
+                    type: 'video',
+                    sources: [
+                        {
+                            src: id,
+                            provider: 'youtube',
+                        },
+                    ],
+                };
+            }
+        }
+
+        // Listen for message instructions from the parent React window
+        window.addEventListener('message', (e) => {
+            const data = e.data;
+            if (!data) return;
+
+            if (data.command === 'play') {
+                player.play();
+            } else if (data.command === 'pause') {
+                player.pause();
+            } else if (data.command === 'load' && data.id) {
+                loadVideo(data.id);
+            }
+        });
+    </script>
+</body>
+
+</html>

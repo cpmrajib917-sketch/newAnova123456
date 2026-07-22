@@ -1,0 +1,6 @@
+{
+  "name": "Anime Streaming with Live Chat",
+  "description": "An immersive anime streaming website with real-time active users list, chat, discussion comments, bookmarks, search, custom content admin panel, and responsive streaming layout.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

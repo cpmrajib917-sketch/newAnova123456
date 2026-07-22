@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Outfit:wght@800;900&display=swap');
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-bg: #02040a;
+  --color-background: #02040a;
+  --color-card: #0b1528;
+  --color-primary: #00e5ff;
+  --color-primary-hover: #00b0ff;
+  --color-primary-foreground: #02040a;
+  --color-accent: #020817;
+  --color-accent-hover: #0b1528;
+  --color-accent-foreground: #ffffff;
+  --color-foreground: #ffffff;
+  --color-muted: #0b1528;
+  --color-muted-foreground: #94a3b8;
+  --color-border: rgba(255,255,255,0.08);
+  --color-input: #0b1528;
+  --color-ring: #00e5ff;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-secondary: #0b1528;
+  --color-secondary-foreground: #ffffff;
+  --color-popover: #0b1528;
+  --color-popover-foreground: #ffffff;
+  --color-card-foreground: #ffffff;
+  --color-sidebar: #0b1528;
+  --color-sidebar-foreground: #ffffff;
+  --color-sidebar-primary: #00e5ff;
+  --color-sidebar-primary-foreground: #02040a;
+  --color-sidebar-accent: #020817;
+  --color-sidebar-accent-foreground: #ffffff;
+  --color-sidebar-border: rgba(255,255,255,0.08);
+  --color-sidebar-ring: #00e5ff;
+  --color-chart-1: #00e5ff;
+  --color-chart-2: #00b0ff;
+  --color-chart-3: #7c3aed;
+  --color-chart-4: #f59e0b;
+  --color-chart-5: #ef4444;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+}
+
+:root {
+  --bg: #02040a;
+  --card: #0b1528;
+  --blue: #00e5ff;
+  --blue2: #00b0ff;
+  --green: #00e5ff;
+  --green2: #00b0ff;
+  --radius: 0.5rem;
+  background-color: var(--bg);
+  color: white;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at 50% 50%, #0c1c38 0%, #050a15 60%, #010307 100%);
+  background-attachment: fixed;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  color: white;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+
+@layer base {
+  * { border-color: var(--color-border); }
+}

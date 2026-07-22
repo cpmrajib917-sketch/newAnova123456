@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Outfit:wght@800;900&display=swap');
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-bg: #050816;
+  --color-background: #050816;
+  --color-card: #101B34;
+  --color-card-hover: #162547;
+  
+  --color-primary: #4FE3FF;
+  --color-primary-hover: #4F8CFF;
+  --color-primary-foreground: #ffffff;
+  
+  --color-accent: #6C63FF;
+  --color-accent-hover: #4F8CFF;
+  --color-accent-foreground: #ffffff;
+  
+  --color-foreground: #ffffff;
+  --color-muted: #0B1224;
+  --color-muted-foreground: #8DA3D6;
+  
+  --color-border: rgba(120, 160, 255, 0.12);
+  --color-input: #0D1730;
+  --color-ring: #4FE3FF;
+  
+  --color-destructive: #FF5D73;
+  --color-destructive-foreground: #ffffff;
+  
+  --color-secondary: #0B1224;
+  --color-secondary-foreground: #C6D6FF;
+  
+  --color-popover: #101B34;
+  --color-popover-foreground: #ffffff;
+  --color-card-foreground: #ffffff;
+  
+  --color-sidebar: #0B1224;
+  --color-sidebar-foreground: #C6D6FF;
+  --color-sidebar-primary: #4FE3FF;
+  --color-sidebar-primary-foreground: #050816;
+  --color-sidebar-accent: #101B34;
+  --color-sidebar-accent-foreground: #ffffff;
+  --color-sidebar-border: rgba(120, 160, 255, 0.12);
+  --color-sidebar-ring: #4FE3FF;
+  
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+}
+
+:root {
+  --bg: #050816;
+  --card: #101B34;
+  --blue: #4FE3FF;
+  --blue2: #4F8CFF;
+  --green: #3BEA8F;
+  --green2: #3BEA8F;
+  --radius: 0.5rem;
+  background-color: var(--bg);
+  color: white;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at 50% 50%, #101B34 0%, #0B1224 50%, #050816 100%);
+  background-attachment: fixed;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  color: white;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--card);
+  border: 1px solid rgba(120, 160, 255, 0.12);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+
+@layer base {
+  * { border-color: var(--color-border); }
+}
+
+/* =========================================================
+   PREMIUM THEME COLOR SYSTEM OVERRIDES FOR HARDCODED UTILITIES
+   ========================================================= */
+
+/* --- BACKGROUNDS --- */
+
+/* Main Background Override (#050816) */
+.bg-\[\#02040a\],
+.bg-\[\#020408\],
+.bg-\[\#03060c\],
+.bg-\[\#030712\],
+.bg-\[\#050505\],
+.bg-\[\#010307\],
+.bg-\[\#05080f\],
+.bg-\[\#050810\],
+.bg-\[\#050812\],
+.bg-\[\#050914\],
+.bg-\[\#070a12\],
+.bg-\[\#090d1a\],
+.bg-\[\#0d111a\],
+.bg-bg,
+.bg-background {
+  background-color: #050816 !important;
+}
+
+/* Secondary Background Override (#0B1224) */
+.bg-\[\#0b1224\],
+.bg-\[\#0b1528\],
+.bg-\[\#0c101d\],
+.bg-\[\#0a101d\],
+.bg-\[\#0e1424\],
+.bg-\[\#0b101d\],
+.bg-\[\#050c18\],
+.bg-secondary,
+.bg-muted {
+  background-color: #0B1224 !important;
+}
+
+/* Cards Override (#101B34) */
+.bg-\[\#101b34\],
+.bg-\[\#10141f\],
+.bg-\[\#0a0d14\],
+.bg-\[\#0a0f1d\],
+.bg-\[\#0e1320\],
+.bg-\[\#070a10\],
+.bg-\[\#0a1836\],
+.bg-\[\#1E3A8A\],
+.bg-card {
+  background-color: #101B34 !important;
+}
+
+/* Hover Cards Override (#162547) */
+.bg-\[\#162547\],
+.hover\:bg-\[\#162547\]:hover,
+.hover\:bg-card-hover:hover {
+  background-color: #162547 !important;
+}
+
+/* --- BORDERS --- */
+.border-white\/5,
+.border-white\/10,
+.border-cyan-500\/15,
+.border-cyan-500\/20,
+.border-border {
+  border-color: rgba(120, 160, 255, 0.12) !important;
+}
+
+/* --- TEXT COLORS --- */
+
+/* Primary Text */
+.text-white {
+  color: #FFFFFF !important;
+}
+
+/* Secondary Text */
+.text-gray-200,
+.text-gray-300,
+.text-secondary {
+  color: #C6D6FF !important;
+}
+
+/* Muted Text */
+.text-gray-400,
+.text-gray-500,
+.text-muted-foreground {
+  color: #8DA3D6 !important;
+}
+
+/* Accent Colors */
+.text-\[\#00e5ff\],
+.text-primary,
+.text-cyan-400 {
+  color: #4FE3FF !important;
+}
+
+/* --- BUTTONS --- */
+
+/* Primary Button (Gradient + Soft Glow) */
+.bg-primary,
+.bg-\[\#00e5ff\],
+.bg-\[\#00cce0\],
+.bg-\[\#00c5db\] {
+  background: linear-gradient(135deg, #5E5CFF, #3E8BFF, #41D6FF) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(62, 139, 255, 0.25) !important;
+  transition: all 0.3s ease !important;
+}
+
+.bg-primary:hover,
+.bg-\[\#00e5ff\]:hover,
+.bg-\[\#00cce0\]:hover,
+.bg-\[\#00c5db\]:hover {
+  filter: brightness(1.15) !important;
+  box-shadow: 0 0 25px rgba(65, 214, 255, 0.45) !important;
+  transform: translateY(-1px);
+}
+
+/* Secondary Button (rgba(255,255,255,.05)) */
+.bg-white\/5,
+.bg-\[\#0c101d\]\/60,
+.bg-cyan-950\/20,
+.bg-\[\#0e1424\]\/40 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  color: #C6D6FF !important;
+  transition: all 0.3s ease !important;
+}
+
+.bg-white\/5:hover,
+.bg-\[\#0c101d\]\/60:hover,
+.bg-cyan-950\/20:hover,
+.bg-\[\#0e1424\]\/40:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #FFFFFF !important;
+}
+
+/* --- CARD HOVER EFFECT --- */
+.hover\:scale-\[1\.03\]:hover,
+.hover\:scale-\[1\.02\]:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45) !important;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease !important;
+}
+
+/* --- INPUTS --- */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+  background-color: #0D1730 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #FFFFFF !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #4FE3FF !important;
+  outline: none !important;
+  box-shadow: 0 0 10px rgba(79, 227, 255, 0.25) !important;
+}
+
+/* --- BADGES & PILLS --- */
+.badge {
+  background-color: #0B1224;
+  border: 1px solid rgba(79, 227, 255, 0.3);
+  box-shadow: 0 0 10px rgba(79, 227, 255, 0.15);
+  color: #4FE3FF;
+}
